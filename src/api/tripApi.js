@@ -1,9 +1,16 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || '';
+// On Vercel (HTTPS), use relative /api so rewrites proxy to backend and avoid mixed content.
+// Locally, use VITE_API_URL or fallback to same-origin.
+const getApiBase = () => {
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+    return '';
+  }
+  return import.meta.env.VITE_API_URL || '';
+};
 
 const api = axios.create({
-  baseURL: API_BASE,
+  baseURL: getApiBase(),
   timeout: 60000,
 });
 
